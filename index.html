@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock & Stopwatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #clock {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        #stopwatch {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Digital Clock</h1>
+        <div id="clock"></div>
+        <h1>Stopwatch</h1>
+        <div id="stopwatch">00:00:00</div>
+        <button id="startStop">Start</button>
+        <button id="reset">Reset</button>
+    </div>
+
+    <script>
+        // Digital Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call
+
+        // Stopwatch
+        let stopwatchInterval;
+        let stopwatchTime = 0;
+        let isRunning = false;
+
+        function updateStopwatch() {
+            stopwatchTime++;
+            const hours = String(Math.floor(stopwatchTime / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((stopwatchTime % 3600) / 60)).padStart(2, '0');
+            const seconds = String(stopwatchTime % 60).padStart(2, '0');
+            document.getElementById('stopwatch').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        document.getElementById('startStop').addEventListener('click', () => {
+            if (isRunning) {
+                clearInterval(stopwatchInterval);
+                document.getElementById('startStop').textContent = 'Start';
+            } else {
+                stopwatchInterval = setInterval(updateStopwatch, 1000);
+                document.getElementById('startStop').textContent = 'Stop';
+            }
+            isRunning = !isRunning;
+        });
+
+        document.getElementById('reset').addEventListener('click', () => {
+            clearInterval(stopwatchInterval);
+            stopwatchTime = 0;
+            document.getElementById('stopwatch').textContent = '00:00:00';
+            document.getElementById('startStop').textContent = 'Start';
+            isRunning = false;
+        });
+    </script>
+</body>
+</html>
